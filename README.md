@@ -1,4 +1,4 @@
-# Module 10 Challenge: Node.js and Jest - Dynamic SVG Logo Maker
+# Module 12 Challenge: SQL - Employee Tracker
 
   ## Table of Contents
   - [Description](#description)
