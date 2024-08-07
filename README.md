@@ -17,7 +17,11 @@
   To install this project after copying down the repo, you will first need to run npm init (-y for default settings) on the project root, which should grant you access to inquirer 8.2.4 and pg; Use of other/newer versions of inquirer are not recommended for this project unless I can figure out how to update the inquirer syntax in the actual js code.
 
   ## Usage
-  To use this project, ensure you have Postgres and the node packages installed as specified in the Installation section above. Then open a terminal on the project root and simply run node index.js - from there, just answer the questions!
+  1. To use this project, ensure you have [Postgres](https://www.postgresql.org/download/) and the node packages installed as specified in the Installation section above.
+  2. Open a terminal on the db folder and run psql postgres.
+  3. In Postgres, run \i schema.db to build the db.
+  4. In Postgres, run \i seeds.db to seed the db.
+  5. Open a separate terminal on the project root and simply run node index.js - from there, just answer the questions!
 
   [A video tutorial for using content-management-system](https://drive.google.com/file/d/EXTENSION)
 
