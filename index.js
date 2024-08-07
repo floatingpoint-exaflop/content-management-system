@@ -16,20 +16,29 @@ const pool = new Pool({
 //viewAll functions
 //-------------------------------------------------------
 async function viewAllEmployees(){
-    const employees = await pool.query('SELECT id, first_name, last_name, title, department, salary, manager_id FROM employee');
-    console.table(employees);
+    const {rows} = await pool.query(`
+SELECT employee.id AS id, CONCAT(employee.first_name, \' \', employee.last_name) AS employee_name, role.title AS title, department.name AS department, role.salary AS salary, CONCAT(manager.first_name, \' \', manager.last_name) AS manager_name
+FROM employee
+INNER JOIN role ON employee.role_id = role.id
+INNER JOIN department on department.id = role.department_id
+INNER JOIN employee manager on employee.manager_id = manager.id
+`);
+    console.table(rows);
     start();
 }
 //-------------------------------------------------------
 async function viewAllDepartments(){
-    const departments = await pool.query('SELECT id, name FROM department');
-    console.table(departments);
+    const {rows} = await pool.query(`SELECT id, name FROM department`);
+    console.table(rows);
     start();
 }
 //-------------------------------------------------------
 async function viewAllRoles(){
-    const roles = await pool.query('SELECT id, title, department_id, salary FROM role');
-    console.table(roles);
+    const {rows} = await pool.query(`SELECT role.id, title, department.name AS department, salary 
+    FROM role
+    INNER JOIN department on department.id = role.department_id
+    `);
+    console.table(rows);
     start();
 }
 //-------------------------------------------------------
@@ -39,6 +48,7 @@ async function addNewEmployee(){
     const employeeInst = new Employee;
     const data = await employeeInst.addEmployee();
     const insert = await pool.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4) RETURNING id', [data.firstName, data.lastName, data.roleId, data.managerId]);
+
     console.log(`New employee ${data.firstName} ${data.lastName} added!`);
     start();
 }
@@ -46,6 +56,7 @@ async function addNewEmployee(){
 async function addNewDepartment(){
     const deptInst = new Department;
     const data = await deptInst.addDepartment();
+
     const insert = await pool.query('INSERT INTO department(name) VALUES($1) RETURNING id', [data.name]);
     console.log(`New ${data.name} Department added!`);
     start();
@@ -64,10 +75,22 @@ async function addNewRole(){
 async function updateEmployeeRole(){
     const employeeInst = new Employee;
     const data = await employeeInst.updateEmployee();
-    // const managerId = data.newManagerId === '' ? null : data.newManagerId;
-    const update = await pool.query('UPDATE employee SET role_id = $1, manager_id = $2 WHERE first_name = $3 AND last_name = $4',[data.newRoleId, data.newManagerId, data.firstName, data.lastName]
-  );
-    console.log(`${data.firstName} ${data.lastName} is now listed as a ${data.newRoleId} reporting to ${data.newManagerId}!`);
+
+    const update = await pool.query('UPDATE employee SET role_id = $1, manager_id = $2 WHERE id = $3',[data.newRoleId, data.newManagerId, data.selectedEmployee]
+    );
+
+    const getName = await pool.query('SELECT first_name, last_name FROM employee WHERE id = $1', [data.selectedEmployee]);
+    const updatedEmployee = getName.rows[0];
+
+    const getRole = await pool.query('SELECT title FROM role WHERE id = $1', [data.newRoleId]);
+    const updatedRole = getRole.rows[0];
+
+    const getManager = await pool.query('SELECT first_name, last_name FROM employee WHERE id = $1', [data.newManagerId]);
+    const updatedManager = getManager.rows[0];
+
+    const managerName = updatedManager ? `${updatedManager.first_name} ${updatedManager.last_name}` : 'no one';
+
+    console.log(`${updatedEmployee.first_name} ${updatedEmployee.last_name} is now listed as a ${updatedRole.title} reporting to ${managerName}!`);
     start();
 }
 //-------------------------------------------------------
