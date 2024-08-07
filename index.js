@@ -21,7 +21,7 @@ SELECT employee.id AS id, CONCAT(employee.first_name, \' \', employee.last_name)
 FROM employee
 INNER JOIN role ON employee.role_id = role.id
 INNER JOIN department on department.id = role.department_id
-INNER JOIN employee manager on employee.manager_id = manager.id
+LEFT JOIN employee manager on employee.manager_id = manager.id
 `);
     console.table(rows);
     start();
