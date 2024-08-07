@@ -23,7 +23,7 @@
   4. In Postgres, run \i seeds.db to seed the db.
   5. Open a separate terminal on the project root and simply run node index.js - from there, just answer the questions!
 
-  [A video tutorial for using content-management-system](https://drive.google.com/file/d/EXTENSION)
+  [A video tutorial for using content-management-system](https://drive.google.com/file/d/1yQuKcbh9Tuz5dCkIeQyQv9uio7ZEFu5d/view?usp=sharing)
 
   ## Contributing
   If you want to contribute to this project - particularly if you know how I might refactor the code so it works with later versions of inquirer, see my contact info in the Questions section below. I am also curious about ways we might allow the user to give information that we could apply within bounds to ensure we are giving greater design flexibility to store more interesting collections of data in the db and related outputs. Don’t hesitate to reach out! I am a beginner at this stuff but always hungry to learn from others in the community.
