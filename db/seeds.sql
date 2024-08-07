@@ -4,13 +4,8 @@ VALUES (1, 'English'),
        (3, 'Physics'),
        (4, 'Biology'),
        (5, 'Art');
-
---In this seed data:
--- Teaching Asst. have the Lecturer from their department as their manager's id,
--- Asst. Prof. have the Research Prof. from their department as their manager's id,
--- Lecturer and Research Prof. have the Dept Chair from their department as their manager's id,
--- Dept Chair and Pgm. Coordinator have Dean from their department as their manager's id,
---Deans have NULL, no manager
+SELECT SETVAL('department_id_seq', (SELECT MAX(id) FROM department));
+--avoid issues with id overlap from manual inserts by resetting id counter
 
 INSERT INTO role (id, title, salary, department_id)
 VALUES (1, 'ENG Lecturer', 50000, 1),
@@ -48,6 +43,8 @@ VALUES (1, 'ENG Lecturer', 50000, 1),
        (33, 'ART Dean', 110000, 5),
        (34, 'ART Teaching Asst.', 30000, 5),
        (35, 'ART Pgm. Coordinator', 60000, 5);
+SELECT SETVAL('role_id_seq', (SELECT MAX(id) FROM role));
+
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES  (1, 'Robert', 'Clark', 1, 4),
@@ -85,3 +82,4 @@ VALUES  (1, 'Robert', 'Clark', 1, 4),
         (33, 'Laura', 'Garcia', 33, NULL),
         (34, 'James', 'Martinez', 34, 29),
         (35, 'Linda', 'Robinson', 35, 33);
+SELECT SETVAL('employee_id_seq', (SELECT MAX(id) FROM employee));
